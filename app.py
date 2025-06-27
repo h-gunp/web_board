@@ -12,75 +12,39 @@ db_config = {
     'charset': 'utf8mb4'
 }
 
-db_user = {
-    'host': '127.0.0.1',
-    'port': 3306,
-    'user': 'root',
-    'password': '',
-    'db': 'user',
-    'charset': 'utf8mb4'
-}
-
 def init_db():
 
-    configs = [db_config, db_user]
-
-    for config in configs:
-        conn = None
-        try:
-            server_conn_info = config.copy()
-            db_name = server_conn_info['db']
-            db_info = server_conn_info.pop('db')
-            conn = pymysql.connect(**server_conn_info)
-            
-            with conn.cursor() as cursor:
-                cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name}")
-                conn.select_db(db_name)
-                conn.commit()
-
-            if  db_name == 'board':
-                with conn.cursor() as cursor:
-                    create_table_sql = """
-                    CREATE TABLE IF NOT EXISTS topic (
-                        id INT PRIMARY KEY AUTO_INCREMENT,
-                        title VARCHAR(255) NOT NULL,
-                        body TEXT NOT NULL
-                    )
-                    """
-                    cursor.execute(create_table_sql)
-                    conn.commit()
-            elif db_name == 'user':
-                with conn.cursor() as cursor:
-                    create_table_sql = """
-                    CREATE TABLE IF NOT EXISTS topic (
-                        id INT PRIMARY KEY AUTO_INCREMENT,
-                        user_id TEXT NOT NULL,
-                        password TEXT NOT NULL
-                    )
-                    """
-                    cursor.execute(create_table_sql)
+    config = db_config
+    conn = None
+    try:
+        server_conn_info = config.copy()
+        db_name = server_conn_info['db']
+        db_info = server_conn_info.pop('db')
+        conn = pymysql.connect(**server_conn_info)
+    
+        with conn.cursor() as cursor:
+                    cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name}")
+                    conn.select_db(db_name)
                     conn.commit()
 
+        with conn.cursor() as cursor:
+            create_table_sql = """
+            CREATE TABLE IF NOT EXISTS topic (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            title VARCHAR(255) NOT NULL,
+            body TEXT NOT NULL
+            )
+            """
+            cursor.execute(create_table_sql)
+            conn.commit()
             print("데이터베이스 연결 완료.")
 
-        except Exception as e:
-            print(f"오류 발생: {e}")
+    except Exception as e:
+        print(f"오류 발생: {e}")
             
-        finally:
+    finally:
             if conn:
                 conn.close()
-
-def get_user_connection():
-    conn = pymysql.connect(
-        host=db_user['host'],
-        port=db_user['port'],
-        user=db_user['user'],
-        password=db_user['password'],
-        db=db_user['db'],
-        charset=db_user['charset'],
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    return conn
 
 def get_db_connection():
     conn = pymysql.connect(
