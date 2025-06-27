@@ -139,15 +139,12 @@ def create():
             return redirect(f'/read/{new_id}/')
 
         else: # request.method == 'GET'
-            with conn.cursor() as cursor:
-                sql = "SELECT * FROM topic ORDER BY id DESC"
-                cursor.execute(sql)
-                all_topics = cursor.fetchall()
-            return render_template('create.html', topics=all_topics)
+            return render_template('create.html')
 
     except Exception as e:
         print(f"데이터 처리 오류: {e}")
         return "오류가 발생했습니다. <a href='/'>돌아가기</a>"
+    
     finally:
         if conn:
             conn.close() 
@@ -170,11 +167,6 @@ def update(id):
 
         else:
             with conn.cursor() as cursor:
-                sql = "SELECT * FROM topic ORDER BY id DESC"
-                cursor.execute(sql)
-                all_topics = cursor.fetchall()
-
-            with conn.cursor() as cursor:
                 sql = "SELECT * FROM topic WHERE id = %s"
                 cursor.execute(sql, (id,))
                 topic = cursor.fetchone()
@@ -182,7 +174,7 @@ def update(id):
             if topic is None:
                 return "존재하지 않는 게시글입니다. <a href='/'>돌아가기</a>"
 
-            return render_template('update.html', topics=all_topics, topic=topic)
+            return render_template('update.html', topic=topic)
             
     except Exception as e:
         print(f"데이터 처리 오류: {e}")
