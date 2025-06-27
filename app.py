@@ -100,11 +100,6 @@ def read(id):
     conn = None
     try:
         conn = get_db_connection()
-        
-        with conn.cursor() as cursor:
-            sql = "SELECT * FROM topic ORDER BY id DESC"
-            cursor.execute(sql)
-            all_topics = cursor.fetchall()
 
         with conn.cursor() as cursor:
             sql = "SELECT * FROM topic WHERE id = %s"
