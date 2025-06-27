@@ -18,8 +18,7 @@ def init_db():
     conn = None
     try:
         server_conn_info = config.copy()
-        db_name = server_conn_info['db']
-        db_info = server_conn_info.pop('db')
+        db_name = server_conn_info.pop('db')
         conn = pymysql.connect(**server_conn_info)
     
         with conn.cursor() as cursor:
