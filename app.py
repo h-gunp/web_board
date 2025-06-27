@@ -109,7 +109,7 @@ def read(id):
         if topic is None:
             return "존재하지 않는 게시글입니다. <a href='/'>돌아가기</a>"
 
-        return render_template('read.html', topics=all_topics, topic=topic)
+        return render_template('read.html',topic=topic)
 
     except Exception as e:
         print(f"데이터베이스 조회 오류: {e}")
