@@ -7,7 +7,7 @@ db_config = {
     'host': '127.0.0.1',
     'port': 3306,
     'user': 'root', 
-    'password': '',
+    'password': '?h10720!',
     'db': 'board',
     'charset': 'utf8mb4'
 }
@@ -132,11 +132,9 @@ def create():
             with conn.cursor() as cursor:
                 sql = "INSERT INTO topic (title, body) VALUES (%s, %s)"
                 cursor.execute(sql, (title, body))
-            
-            conn.commit()
-            
-            new_id = cursor.lastrowid
-            return redirect(f'/read/{new_id}/')
+                conn.commit()
+                new_id = cursor.lastrowid
+                return redirect(f'/read/{new_id}/')
 
         else: # request.method == 'GET'
             return render_template('create.html')
@@ -162,8 +160,8 @@ def update(id):
             with conn.cursor() as cursor:
                 sql = "UPDATE topic SET title=%s, body=%s WHERE id=%s"
                 cursor.execute(sql, (title, body, id))
-            conn.commit()
-            return redirect(f'/read/{id}/')
+                conn.commit()
+                return redirect(f'/read/{id}/')
 
         else:
             with conn.cursor() as cursor:
@@ -191,8 +189,8 @@ def delete(id):
         with conn.cursor() as cursor:
             sql = "DELETE FROM topic WHERE id = %s"
             cursor.execute(sql, (id,))
-        conn.commit()
-        return redirect('/')
+            conn.commit()
+            return redirect('/')
     
     except Exception as e:
         print(f"데이터 처리 오류: {e}")
